@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head> 
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>parque</title>
+        <style>
+            body{
+                margin:0;
+                overflow: hidden;
+                font-family: Arial;
+            }
+            #Panel{
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                padding: 10px;
+                background: rgba(rgb(255, 255, 255), rgb(0, 131, 0), rgb(255, 255, 255));
+                border-radius: 12px;
+                width: 200px;
+                color: rgb(255, 255, 255);
+            }
+            #Panel label{
+                font-size: 16px;
+                margin-top: 5;
+            }
+            #Panel input{
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="Panel">
+            <label>Animation</label>
+            <button id="rotate">Deactivate/Activate</button>
+
+            <label>Proyectos</label>
+            <label>Main</label>
+            <a href="index.html" style="text-decoration: none;">
+                <button>Main</button>
+            </a>
+            <label>Parque</label>
+            <a href="park-index.html" style="text-decoration: none;">
+                <button>Parque</button>
+            </a>
+            <label>Arbol</label>
+            <a href="tree-index.html" style="text-decoration: none;">
+                <button>Arbol</button>
+            </a>
+            <label>AR</label>
+            <a href="res-index.html" style="text-decoration: none;">
+                <button>AR</button>
+            </a>
+
+        </div>
+
+        <!--libreria de threejs-->
+        <script src="js/three.min.js"></script>
+        <!--libreria gltfloader-->
+        <script src="js/GLFTLoader.js"></script>
+        <!--Aplicacion o escena de threejs-->
+        <script src="apps/tree.js"></script>
+    </body>
+</html>

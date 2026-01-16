@@ -28,14 +28,6 @@
                 width: 100%;
                 margin-bottom: 10px;
             }
-            #Panel boton{
-                width: 100%;
-                margin-top: 5px;
-                padding: 6;
-                border: none;
-                border-radius: 6px;
-                cursor: pointer;
-            }
         </style>
     </head>
     <body>
@@ -49,11 +41,23 @@
             <label>Animation</label>
             <button id="rotate">Deactivate/Activate</button>
 
-            <label for="projects">Escoge un proyecto:</label>
-                <select name="projects" id="projects">
-                <option value="cube">Cubos</option>
-                <option value="park">Parque</option>
-                </select> 
+            <label>Proyectos</label>
+            <label>Main</label>
+            <a href="index.html" style="text-decoration: none;">
+                <button>Main</button>
+            </a>
+            <label>Parque</label>
+            <a href="park-index.html" style="text-decoration: none;">
+                <button>Parque</button>
+            </a>
+            <label>Arbol</label>
+            <a href="tree-index.html" style="text-decoration: none;">
+                <button>Arbol</button>
+            </a>
+            <label>AR</label>
+            <a href="res-index.html" style="text-decoration: none;">
+                <button>AR</button>
+            </a>
         </div>
 
         <!--libreria de threejs-->
@@ -61,6 +65,6 @@
         <!--libreria gltfloader-->
         <script src="js/GLFTLoader.js"></script>
         <!--Aplicacion o escena de threejs-->
-        <script src="apps/park.js"></script>
+        <script src="apps/newmodel.js"></script>
     </body>
 </html>
