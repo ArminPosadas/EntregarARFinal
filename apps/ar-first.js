@@ -6,18 +6,11 @@ let camera, scene, renderer, model;
 let controller;
 
 init();
-loadModel();
-animate();
 
 function init() {
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(
-        70,
-        window.innerWidth / window.innerHeight,
-        0.01,
-        20
-    );
+    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -28,7 +21,7 @@ function init() {
     document.body.appendChild(
         ARButton.createButton(renderer)
     );
-
+    
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     scene.add(light);
 
@@ -37,6 +30,7 @@ function init() {
     scene.add(controller);
 
     window.addEventListener('resize', onWindowResize);
+    loadModel();
 }
 
 function loadModel() {
@@ -66,6 +60,7 @@ function onSelect() {
 function animate() {
     renderer.setAnimationLoop(render);
 }
+animate();
 
 function render() {
     renderer.render(scene, camera);
