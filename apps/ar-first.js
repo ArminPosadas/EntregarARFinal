@@ -38,7 +38,7 @@ function init(){
 
 function loadModel(){
     const loader = new GLTFLoader();
-    loader.load('models/slime.glb', function(gltf) {
+    loader.load('models/Slime.glb', function(gltf) {
     model = gltf.scene;
     model.scale.set(0.1, 0.1, 0.1);
     model.visible = false;
