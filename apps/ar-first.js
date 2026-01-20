@@ -1,9 +1,10 @@
-import * as THREE from 'js/three.module.js';
-import { ARButton } from 'js/ARButton.js';
-import { GLTFLoader } from 'js/GLTFLoader.js';
+import * as THREE from 'three';
+import { ARButton } from './js/ARButton.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 let camera, scene, renderer, model;
 let controller;
+let reticle;
 
 init();
 
@@ -16,11 +17,10 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.xr.enabled = true;
+    renderer.outputEncoding = THREE.sRGBEncoding;
 
     document.body.appendChild(renderer.domElement);
-    document.body.appendChild(
-        ARButton.createButton(renderer)
-    );
+    document.body.appendChild(ARButton.createButton(renderer));
     
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     scene.add(light);
@@ -29,7 +29,16 @@ function init() {
     controller.addEventListener('select', onSelect);
     scene.add(controller);
 
+    reticle = new THREE.Mesh(
+        new THREE.RingGeometry(0.05, 0.1, 32).rotateX(-Math.PI / 2),
+        new THREE.MeshBasicMaterial({ color: 0xffffff })
+    );
+    reticle.matrixAutoUpdate = false;
+    reticle.visible = false;
+    scene.add(reticle);
+
     window.addEventListener('resize', onWindowResize);
+    
     loadModel();
 }
 
@@ -38,32 +47,65 @@ function loadModel() {
     loader.load('models/Slime.glb', function (gltf) {
         model = gltf.scene;
         model.scale.set(0.1, 0.1, 0.1);
-        model.visible = true;
-
-        model.position.set(0, 0, -1);
-
-        scene.add(model);
+        model.visible = false;
+        model.name = 'slime_model';
+        
+    }, undefined, function (error) {
+        console.error('Error loading model:', error);
     });
 }
 
 function onSelect() {
-    const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-    const material = new THREE.MeshStandardMaterial({ color: 0xf27f5d });
-    const cube = new THREE.Mesh(geometry, material);
-
-    cube.position.setFromMatrixPosition(controller.matrixWorld);
-    cube.quaternion.setFromRotationMatrix(controller.matrixWorld);
-
-    scene.add(cube);
+    if (model && !model.parent) {
+        const placedModel = model.clone();
+        placedModel.visible = true;
+        
+        if (reticle.visible) {
+            placedModel.position.copy(reticle.position);
+            placedModel.quaternion.copy(reticle.quaternion);
+        } else {
+            placedModel.position.setFromMatrixPosition(controller.matrixWorld);
+            placedModel.quaternion.setFromRotationMatrix(controller.matrixWorld);
+        }
+        
+        scene.add(placedModel);
+    }
 }
 
 function animate() {
     renderer.setAnimationLoop(render);
 }
-animate();
 
-function render() {
+function render(timestamp, frame) {
+    if (frame) {
+        const referenceSpace = renderer.xr.getReferenceSpace();
+        const session = renderer.xr.getSession();
+        
+        if (session && referenceSpace) {
+            updateReticle(frame);
+        }
+    }
+    
     renderer.render(scene, camera);
+}
+
+function updateReticle(frame) {
+    const referenceSpace = renderer.xr.getReferenceSpace();
+    const hitTestSource = renderer.xr.getHitTestSource(0);
+    
+    if (hitTestSource && frame) {
+        const hitTestResults = frame.getHitTestResults(hitTestSource);
+        
+        if (hitTestResults.length > 0) {
+            const hit = hitTestResults[0];
+            const pose = hit.getPose(referenceSpace);
+            
+            reticle.visible = true;
+            reticle.matrix.fromArray(pose.transform.matrix);
+        } else {
+            reticle.visible = false;
+        }
+    }
 }
 
 function onWindowResize() {
@@ -71,3 +113,5 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
+animate();
