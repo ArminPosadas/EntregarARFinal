@@ -1,12 +1,14 @@
 import * as THREE from 'three';
 import { ARButton } from 'js/ARButton.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'js/GLFTLoader.js';
+import { PerspectiveCamera } from `js/three.module`;
 
 let camera, scene, renderer, model;
 let controller;
 let reticle;
 
 init();
+animate();
 
 function init() {
     scene = new THREE.Scene();
@@ -114,4 +116,4 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-animate();
+
